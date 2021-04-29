@@ -1,0 +1,1420 @@
+<!doctype html>
+<html lang=en>
+   <head>
+      <meta charset=utf-8>
+      <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1">
+      <title>Live Coin Watch API Documentation</title>
+      <link rel=icon href=images/bookmark.png>
+      <link href=stylesheets/screen.css rel=stylesheet media=screen>
+      <link href=stylesheets/print.css rel=stylesheet media=print>
+      <link href=stylesheets/highlight-gruvbox-dark.css rel=stylesheet media=screen,print>
+      <script src=javascripts/all.js></script>
+   </head>
+   <body class="" data-languages="[&#34;shell&#34;,&#34;javascript&#34;]">
+      <a href=# id=nav-button>
+         <span>NAV <img alt=navbar class=image-navbar src=images/navbar.png></span>
+      </a>
+      <div class=tocify-wrapper>
+         <img alt=logo class=image-logo src=images/logo.png>
+         <div class=lang-selector>
+            <a href=# data-language-name="shell">shell</a>
+            <a href=# data-language-name="javascript">javascript</a>
+         </div>
+         <div class=search>
+            <input type=text class=search id=input-search placeholder="Search">
+         </div>
+         <ul class=search-results></ul>
+         <div id=toc></div>
+         <ul class=toc-footer>
+            <li><a href="https://www.livecoinwatch.com/tools/api" target="_blank">Sign Up for Free Developer Key</a></li>
+         </ul>
+      </div>
+      <div class=page-wrapper>
+         <div class=dark-box></div>
+         <div class=content>
+            <h1 id="introduction">Introduction</h1>
+            <p>Welcome to <a href="https://www.livecoinwatch.com">Live Coin Watch</a> API documentation page!</p>
+            <p>If you&#39;re extremely impatient, just jump to <a href="https://www.livecoinwatch.com/tools/api">API playground</a></p>
+            <p>In this document, you should be able to find everything you need to know to use our API, but if you need help, you&#39;re welcome to drop in and ask questions at few places:</p>
+            <ul>
+               <li><a href="mailto:contact+api@livecoinwatch.com">Simple mail</a> always works.</li>
+               <li><a href="https://www.livecoinwatch.com">Trollbox</a> on our site.</li>
+               <li><a href="https://twitter.com">Our Twitter</a>, if it&#39;s really that bad.</li>
+               <li><a href="https://telegram.com">Telegram channel</a> is very fun as well.</li>
+            </ul>
+            <p>Issues specific to the API documentation should be created at <a href="https://github.com/LiveCoinWatch/lcw-api-docs/issues">Issues page</a>.</p>
+            <p>Now, to follow remainder of the document, let&#39;s set you up with your preferred <a href="#environments">environment</a> of choice...</p>
+            <aside class="success"> Print it or take it offline! This guide contains fairly reliable stylesheet for print screens. It should be easy for you to use your browser's Print dialog. </aside>
+            <h1 id="environments">Environments</h1>
+            <p>If you&#39;re interested in only exploring the API, there&#39;s not better place than <a href="https://www.livecoinwatch.com/tools/api">API playground</a>, in which case you can ignore this chapter.</p>
+            <p>The following are environments we officialy support, though you&#39;re welcome to write-up a wrapper - it&#39;s all simple and standard protocols really. Be sure to <a href="mailto:contact+api@livecoinwatch.com">let us know about it</a>, so we can maybe include it in the documentation!</p>
+            <h2 id="shell">Shell</h2>
+            <pre class="highlight shell"><code>curl -X POST https://api.livecoinwatch.com \
+  -H &#x27;content-type: application/json&#x27;</code></pre>
+            <p>For just exploring and playing around with the API, this might be the simplest option. All examples should run in most shells, as the only command used is the <a href="https://curl.haxx.se/">all-mighty cURL</a>.</p>
+            <aside class="success"> Developers recommend using <a href="https://stedolan.github.io/jq/" target='_blank'>jq</a> in the pipeline, at least for pretty printing of responses. </aside>
+            <h2 id="javascript">JavaScript</h2>
+            <pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({ <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> })
+})</code></pre>
+            <p>All the examples are written for modern browers.</p>
+            <p>Most examples should be easily portable to run in other JavaScript environments like <a href="https://nodejs.org/en/about/releases/">Node.js</a> or not even needing any changes from browser version with <a href="https://deno.land">Deno</a>.</p>
+            <h1 id="concepts">Concepts</h1>
+            <p>We&#39;ve tried to keep the API surface simple and efficient, so let&#39;s discuss few <a href="#concepts">concepts</a> that apply to the entirety of the API.</p>
+            <h2 id="there-is-only-one-domain">There Is Only One <strong>Domain</strong></h2>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/status&#x27; \
+  -H &#x27;content-type: application/json&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({ <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> })
+})</code></pre>
+            <blockquote>
+               <p>If everything&#39;s fine, you should get...</p>
+            </blockquote>
+            <pre class="highlight json"><code>{}</code></pre>
+            <blockquote>
+               <p>...bag of nothing, that&#39;s right! On the other hand, if something&#39;s wrong, you should get some kind of error:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;error&quot;</span>: {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-number">503</span>,
+    <span class="hljs-attr">&quot;status&quot;</span>: <span class="hljs-string">&quot;Service unavailable.&quot;</span>,
+    <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;We&#x27;re temporarily offline for maintenance. Please try again later.&quot;</span>
+  }
+}</code></pre>
+            <p>Everything runs from a single domain, and that is <code>api.livecoinwatch.com</code>. All your HTTPS requests go there.</p>
+            <p>Try running code examples and see for yourself.</p>
+            <h2 id="there-is-only-one-key">There Is Only One <strong>Key</strong></h2>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/credits&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/credits&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Don&#39;t forget to replace <code>&lt;YOUR_API_KEY&gt;</code> with one you&#39;ve got. Return response should be:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">10000</span>,
+  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>
+}</code></pre>
+            <p>Live Coin Watch uses API keys to access all end-points. You can generate a new API key at your <a href="https://www.livecoinwatch.com/profile">profile page</a>. Authorizing with your API key is as simple as providing HTTP header <code>x-api-key: &lt;YOUR_API_KEY&gt;</code>.</p>
+            <p>All (<a href="#status">but one</a>) API end-points need to include this header.</p>
+            <p>You can only ever have one active key, but you can regenerate that one, in the case you lose it or you don&#39;t trust it being secret anymore.</p>
+            <p>Keep the key somewhere private, safe &amp; handy.</p>
+            <aside class="notice"> Astute reader will notice that, by having multiple profiles, they will effectively have more than one key. They would be correct. </aside>
+            <h2 id="there-is-only-one-method">There Is Only One <strong>Method</strong></h2>
+            <pre class="highlight shell"><code>curl &#x27;https://api.livecoinwatch.com/status&#x27; \
+  -H &#x27;content-type: application/json&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;GET&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({ <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> })
+})</code></pre>
+            <blockquote>
+               <p>This will fail with:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;error&quot;</span>: {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-number">405</span>,
+    <span class="hljs-attr">&quot;status&quot;</span>: <span class="hljs-string">&quot;Method Not Available.&quot;</span>,
+    <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;You tried to access a resource with an invalid method.&quot;</span>
+  }
+}</code></pre>
+            <p><code>POST</code> is the only method available to all the API calls.</p>
+            <h2 id="there-is-only-one-format">There Is Only One <strong>Format</strong></h2>
+            <p>Both requests and responses are in the form of JSON, so make sure to have <code>content-type: application/json</code> as well as <code>accept: application/json</code> headers where <a href="#environments">environment</a> demands.</p>
+            <p>JSON in and JSON out, as simple as that.</p>
+            <p>That includes <a href="#errors">errors</a> as well.</p>
+            <h2 id="there-is-only-one-currency">There Is Only One <strong>Currency</strong></h2>
+            <p>Each API call response will only ever be in a single currency - the one you specified in your HTTPS request.</p>
+            <p>It can be <em>any</em> fiat currency or active cryptocurrency.</p>
+            <!-- For your convenience, that currency will be reflected in the response. -->
+            <p>By default, it will be <code>USD</code>.</p>
+            <aside class="notice"> Note that this doesn't prevent you from making any or all of the API calls in different currency. </aside>
+            <h2 id="there-is-only-one-version">There Is Only One <strong>Version</strong></h2>
+            <p>There is only one publicly available version of the API.</p>
+            <p><a href="https://github.com/LiveCoinWatch/lcw-api-docs">Watch this repository</a>! It&#39;ll always update before the actual API updates.</p>
+            <h2 id="there-is-only-one-limit">There Is Only One <strong>Limit</strong></h2>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/credits&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/credits&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Don&#39;t forget to replace <code>&lt;YOUR_API_KEY&gt;</code> with one you&#39;ve got. Return response should be:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">100000</span>,
+  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>
+}</code></pre>
+            <p>Let&#39;s call it <em>credits</em>, and you can read about them <a href="#limits">in detail</a>, but summarized - they map directly to your requests 1-to-1.</p>
+            <p>You can always easily check your credits status at <code>/credits</code> end-point, as well as on your Live Coin Watch <a href="https://www.livecoinwatch.com/profile">profile page</a>.</p>
+            <h1 id="resources">Resources</h1>
+            <p>This describes API resource fetching via HTTPS calls.</p>
+            <h2 id="status"><code>/status</code></h2>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/status&#x27; \
+  -H &#x27;content-type: application/json&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({ <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> })
+})</code></pre>
+            <blockquote>
+               <p>...and it returns nothing! Well, empty JSON object anyways.</p>
+            </blockquote>
+            <p>With this, find out is everything fine with the API. It is also only end-point that doesn&#39;t require <code>x-api-key</code> header.</p>
+            <h3 id="request">Request</h3>
+            <p>Accepts no request parameters.</p>
+            <h3 id="response">Response</h3>
+            <p>Ideally, responds with nothing which means everything is hopefully running fine. One of the <a href="#errors">errors</a> objects otherwise.</p>
+            <h2 id="credits"><code>/credits</code></h2>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/credits&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/credits&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Let&#39;s see how much credits we have and what&#39;s the limit:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">10000</span>,
+  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>
+}</code></pre>
+            <blockquote>
+               <p>Error response (one of):</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;error&quot;</span>: {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-number">401</span>,
+    <span class="hljs-attr">&quot;status&quot;</span>: <span class="hljs-string">&quot;Unauthorized&quot;</span>,
+    <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;Your API key is wrong.&quot;</span>
+  }
+}</code></pre>
+            <p>Through this end-point, you can find out your API key related information.</p>
+            <h3 id="request-1">Request</h3>
+            <p>Accepts no request parameters.</p>
+            <h3 id="response-1">Response</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>dailyCreditsLimit</code></td>
+                     <td>number</td>
+                     <td>total daily starting credits</td>
+                  </tr>
+                  <tr>
+                     <td><code>dailyCreditsRemaining</code></td>
+                     <td>number</td>
+                     <td>remaining daily credits</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="overview"><code>/overview</code></h2>
+            <p>Get current aggregated data for all coins.</p>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/overview&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/overview&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  }),
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({ <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span> })
+})</code></pre>
+            <blockquote>
+               <p>How&#39;s all of crypto doing at the moment:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">1810888785486</span>,
+  <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">70194520152</span>,
+  <span class="hljs-attr">&quot;liquidity&quot;</span>: <span class="hljs-number">3934498354</span>,
+  <span class="hljs-attr">&quot;btcDominance&quot;</span>: <span class="hljs-number">0.5932948858748709</span>
+}</code></pre>
+            <h3 id="request-2">Request</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>currency</code></td>
+                     <td>string</td>
+                     <td>any valid coin or fiat code</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h3 id="response-2">Response</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>cap</code></td>
+                     <td>number</td>
+                     <td>market cap of all coins</td>
+                  </tr>
+                  <tr>
+                     <td><code>volume</code></td>
+                     <td>number</td>
+                     <td>volume of all coins</td>
+                  </tr>
+                  <tr>
+                     <td><code>liquidity</code></td>
+                     <td>number</td>
+                     <td>2% liquidity of all coins</td>
+                  </tr>
+                  <tr>
+                     <td><code>btcDominance</code></td>
+                     <td>number</td>
+                     <td>percentage of BTC cap in total market cap</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="overviewhistory"><code>/overview/history</code></h2>
+            <p>Get historical aggregated data of entire market.</p>
+            <pre class="highlight shell"><code>curl -X POST&#x27;https://api.livecoinwatch.com/overview/history&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;start&quot;:1606232700000,&quot;end&quot;:1606233000000}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/overview/history&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  }),
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span>,
+    <span class="hljs-attr">start</span>: <span class="hljs-number">1606232700000</span>,
+    <span class="hljs-attr">end</span>: <span class="hljs-number">1606233000000</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>How&#39;s all of crypto trending across time:</p>
+            </blockquote>
+            <pre class="highlight json"><code>[
+  {
+    <span class="hljs-attr">&quot;date&quot;</span>: <span class="hljs-number">1606232700000</span>,
+    <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">581093086830</span>,
+    <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">56386526334</span>,
+    <span class="hljs-attr">&quot;liquidity&quot;</span>: <span class="hljs-number">1288814828</span>,
+    <span class="hljs-attr">&quot;btcDominance&quot;</span>: <span class="hljs-number">0.614520121091147</span>
+  },
+  {
+    <span class="hljs-attr">&quot;date&quot;</span>: <span class="hljs-number">1606233000000</span>,
+    <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">582164608234</span>,
+    <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">56939433331</span>,
+    <span class="hljs-attr">&quot;liquidity&quot;</span>: <span class="hljs-number">1274915303</span>,
+    <span class="hljs-attr">&quot;btcDominance&quot;</span>: <span class="hljs-number">0.612858305207367</span>
+  }
+]</code></pre>
+            <h3 id="request-3">Request</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>currency</code></td>
+                     <td>string</td>
+                     <td>any valid coin or fiat code</td>
+                  </tr>
+                  <tr>
+                     <td><code>start</code></td>
+                     <td>number</td>
+                     <td>UNIX timestamp in milliseconds of time interval start</td>
+                  </tr>
+                  <tr>
+                     <td><code>end</code></td>
+                     <td>number</td>
+                     <td>UNIX timestamp in milliseconds of time interval end</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h3 id="response-3">Response</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>date</code></td>
+                     <td>number</td>
+                     <td>UNIX timestamp in milliseconds of datapoint</td>
+                  </tr>
+                  <tr>
+                     <td><code>cap</code></td>
+                     <td>number</td>
+                     <td>market cap of all coins</td>
+                  </tr>
+                  <tr>
+                     <td><code>volume</code></td>
+                     <td>number</td>
+                     <td>volume of all coins</td>
+                  </tr>
+                  <tr>
+                     <td><code>liquidity</code></td>
+                     <td>number</td>
+                     <td>2% liquidity of all coins</td>
+                  </tr>
+                  <tr>
+                     <td><code>btcDominance</code></td>
+                     <td>number</td>
+                     <td>percentage of BTC cap in total market cap</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="coinssingle"><code>/coins/single</code></h2>
+            <p>All information about a single coin at latest moment in time.</p>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/coins/single&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;code&quot;:&quot;ETH&quot;,&quot;meta&quot;:true}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/single&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  }),
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span>,
+    <span class="hljs-attr">code</span>: <span class="hljs-string">&#x27;ETH&#x27;</span>,
+    <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Let&#39;s see all of current data on ETH, in USD currency:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Ethereum&quot;</span>,
+  <span class="hljs-attr">&quot;symbol&quot;</span>: <span class="hljs-string">&quot;Ξ&quot;</span>,
+  <span class="hljs-attr">&quot;color&quot;</span>: <span class="hljs-string">&quot;#282a2a&quot;</span>,
+  <span class="hljs-attr">&quot;png32&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/eth.png&quot;</span>,
+  <span class="hljs-attr">&quot;png64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/eth.png&quot;</span>,
+  <span class="hljs-attr">&quot;webp32&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/eth.webp&quot;</span>,
+  <span class="hljs-attr">&quot;webp64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/eth.webp&quot;</span>,
+  <span class="hljs-attr">&quot;exchanges&quot;</span>: <span class="hljs-number">153</span>,
+  <span class="hljs-attr">&quot;markets&quot;</span>: <span class="hljs-number">3717</span>,
+  <span class="hljs-attr">&quot;pairs&quot;</span>: <span class="hljs-number">1773</span>,
+  <span class="hljs-attr">&quot;allTimeHighUSD&quot;</span>: <span class="hljs-number">2036.3088032624153</span>,
+  <span class="hljs-attr">&quot;circulatingSupply&quot;</span>: <span class="hljs-number">115250583</span>,
+  <span class="hljs-attr">&quot;totalSupply&quot;</span>: <span class="hljs-literal">null</span>,
+  <span class="hljs-attr">&quot;maxSupply&quot;</span>: <span class="hljs-literal">null</span>,
+  <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-number">1786.6742250505124</span>,
+  <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">11522748696</span>,
+  <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">205915246068</span>
+}</code></pre>
+            <h3 id="request-4">Request</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>coin code</td>
+                  </tr>
+                  <tr>
+                     <td><code>currency</code></td>
+                     <td>string</td>
+                     <td>any valid coin or fiat code</td>
+                  </tr>
+                  <tr>
+                     <td><code>meta</code></td>
+                     <td>boolean</td>
+                     <td>to include full coin information or not</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h3 id="response-4">Response</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>name</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s name</td>
+                  </tr>
+                  <tr>
+                     <td><code>symbol</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s symbol</td>
+                  </tr>
+                  <tr>
+                     <td><code>color</code></td>
+                     <td>string</td>
+                     <td>hexadecimal color code (<code>#282a2a</code>)</td>
+                  </tr>
+                  <tr>
+                     <td><code>png32</code></td>
+                     <td>string</td>
+                     <td>32-pixel png image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>png64</code></td>
+                     <td>string</td>
+                     <td>64-pixel png image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp32</code></td>
+                     <td>string</td>
+                     <td>32-pixel webp image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp64</code></td>
+                     <td>string</td>
+                     <td>64-pixel webpg image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>exchanges</code></td>
+                     <td>number</td>
+                     <td>number of exchange coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>markets</code></td>
+                     <td>number</td>
+                     <td>number of markets coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>pairs</code></td>
+                     <td>number</td>
+                     <td>number of unique markets coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>allTimeHighUSD</code></td>
+                     <td>number</td>
+                     <td>all-time high in USD</td>
+                  </tr>
+                  <tr>
+                     <td><code>circulatingSupply</code></td>
+                     <td>number</td>
+                     <td>number of coins minted, but not locked</td>
+                  </tr>
+                  <tr>
+                     <td><code>totalSupply</code></td>
+                     <td>number</td>
+                     <td>number of coins minted, including locked</td>
+                  </tr>
+                  <tr>
+                     <td><code>maxSupply</code></td>
+                     <td>number</td>
+                     <td>maximum number of coins that can be minted</td>
+                  </tr>
+                  <tr>
+                     <td><code>rate</code></td>
+                     <td>number</td>
+                     <td>price of coin in requested currency</td>
+                  </tr>
+                  <tr>
+                     <td><code>volume</code></td>
+                     <td>number</td>
+                     <td>reported trading volume of the coin in last 24 hours in requested currency</td>
+                  </tr>
+                  <tr>
+                     <td><code>cap</code></td>
+                     <td>number</td>
+                     <td>coin&#39;s market cap in requested currency</td>
+                  </tr>
+                  <tr>
+                     <td><code>totalCap</code></td>
+                     <td>number</td>
+                     <td>coin&#39;s hypothetical total capitalization at the moment</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="coinssinglehistory"><code>/coins/single/history</code></h2>
+            <p>Historical values for coin.</p>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/coins/single/history&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;code&quot;:&quot;BTC&quot;,&quot;start&quot;:1617035100000,&quot;end&quot;:1617035400000,&quot;meta&quot;:true}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/single/history&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  }),
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span>,
+    <span class="hljs-attr">code</span>: <span class="hljs-string">&#x27;BTC&#x27;</span>,
+    <span class="hljs-attr">start</span>: <span class="hljs-number">1617035100000</span>,
+    <span class="hljs-attr">end</span>: <span class="hljs-number">1617035400000</span>,
+    <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>How is BTC trending over a period of time:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;BTC&quot;</span>,
+  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Bitcoin&quot;</span>,
+  <span class="hljs-attr">&quot;symbol&quot;</span>: <span class="hljs-string">&quot;₿&quot;</span>,
+  <span class="hljs-attr">&quot;color&quot;</span>: <span class="hljs-string">&quot;#fa9e32&quot;</span>,
+  <span class="hljs-attr">&quot;png32&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/btc.png&quot;</span>,
+  <span class="hljs-attr">&quot;png64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/btc.png&quot;</span>,
+  <span class="hljs-attr">&quot;webp32&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/btc.webp&quot;</span>,
+  <span class="hljs-attr">&quot;webp64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/64/btc.webp&quot;</span>,
+  <span class="hljs-attr">&quot;exchanges&quot;</span>: <span class="hljs-number">145</span>,
+  <span class="hljs-attr">&quot;markets&quot;</span>: <span class="hljs-number">4180</span>,
+  <span class="hljs-attr">&quot;pairs&quot;</span>: <span class="hljs-number">1524</span>,
+  <span class="hljs-attr">&quot;allTimeHighUSD&quot;</span>: <span class="hljs-number">61518.797756895845</span>,
+  <span class="hljs-attr">&quot;circulatingSupply&quot;</span>: <span class="hljs-number">18669593</span>,
+  <span class="hljs-attr">&quot;totalSupply&quot;</span>: <span class="hljs-literal">null</span>,
+  <span class="hljs-attr">&quot;maxSupply&quot;</span>: <span class="hljs-number">21000000</span>,
+  <span class="hljs-attr">&quot;history&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;date&quot;</span>: <span class="hljs-number">1617035100000</span>,
+      <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-number">57372.11890245088</span>,
+      <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">21800580671</span>,
+      <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">1071017666924</span>
+    },
+    {
+      <span class="hljs-attr">&quot;date&quot;</span>: <span class="hljs-number">1617035400000</span>,
+      <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-number">57521.9764455523</span>,
+      <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">21852737676</span>,
+      <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">1073815194352</span>
+    }
+  ]
+}</code></pre>
+            <h3 id="request-5">Request</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>currency</code></td>
+                     <td>string</td>
+                     <td>any valid coin or fiat code</td>
+                  </tr>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>coin code</td>
+                  </tr>
+                  <tr>
+                     <td><code>start</code></td>
+                     <td>number</td>
+                     <td>UNIX timestamp in milliseconds of time interval start</td>
+                  </tr>
+                  <tr>
+                     <td><code>end</code></td>
+                     <td>number</td>
+                     <td>UNIX timestamp in milliseconds of time interval end</td>
+                  </tr>
+                  <tr>
+                     <td><code>meta</code></td>
+                     <td>boolean</td>
+                     <td>to include full coin information or not</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h3 id="response-5">Response</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s own code</td>
+                  </tr>
+                  <tr>
+                     <td><code>name</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s name</td>
+                  </tr>
+                  <tr>
+                     <td><code>symbol</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s symbol</td>
+                  </tr>
+                  <tr>
+                     <td><code>color</code></td>
+                     <td>string</td>
+                     <td>hexadecimal color code (<code>#282a2a</code>)</td>
+                  </tr>
+                  <tr>
+                     <td><code>png32</code></td>
+                     <td>string</td>
+                     <td>32-pixel png image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>png64</code></td>
+                     <td>string</td>
+                     <td>64-pixel png image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp32</code></td>
+                     <td>string</td>
+                     <td>32-pixel webp image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp64</code></td>
+                     <td>string</td>
+                     <td>64-pixel webpg image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>exchanges</code></td>
+                     <td>number</td>
+                     <td>number of exchange coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>markets</code></td>
+                     <td>number</td>
+                     <td>number of markets coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>pairs</code></td>
+                     <td>number</td>
+                     <td>number of unique markets coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>allTimeHighUSD</code></td>
+                     <td>number</td>
+                     <td>all-time high in USD</td>
+                  </tr>
+                  <tr>
+                     <td><code>circulatingSupply</code></td>
+                     <td>number</td>
+                     <td>number of coins minted, but not locked</td>
+                  </tr>
+                  <tr>
+                     <td><code>totalSupply</code></td>
+                     <td>number</td>
+                     <td>number of coins minted, including locked</td>
+                  </tr>
+                  <tr>
+                     <td><code>maxSupply</code></td>
+                     <td>number</td>
+                     <td>maximum number of coins that can be minted</td>
+                  </tr>
+                  <tr>
+                     <td><code>history</code></td>
+                     <td>array</td>
+                     <td>list of <code>date</code>, <code>rate</code>, <code>volume</code> and <code>cap</code></td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="coinslist"><code>/coins/list</code></h2>
+            <p>Assorted information for a list of coins.</p>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/coins/list&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;limit&quot;:2,&quot;sort&quot;:&quot;rank&quot;,&quot;order&quot;:&quot;ascending&quot;,&quot;meta&quot;:false}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/list&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  }),
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span>,
+    <span class="hljs-attr">limit</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">sort</span>: <span class="hljs-string">&#x27;rank&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-string">&#x27;ascending&#x27;</span>,
+    <span class="hljs-attr">meta</span>: <span class="hljs-literal">false</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Let&#39;s see top two coins by rank, just frequently-changing data, please:</p>
+            </blockquote>
+            <pre class="highlight json"><code>[
+  {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;BTC&quot;</span>,
+    <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-number">59075.58195922644</span>,
+    <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">23100393182</span>,
+    <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">1102979514307</span>,
+    <span class="hljs-attr">&quot;maxCap&quot;</span>: <span class="hljs-number">1240587221143.7551</span>
+  },
+  {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
+    <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-number">1933.6392223621567</span>,
+    <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">12686119704</span>,
+    <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">222928063223</span>
+  }
+]</code></pre>
+            <h3 id="request-6">Request</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>currency</code></td>
+                     <td>string</td>
+                     <td>any valid coin or fiat code</td>
+                  </tr>
+                  <tr>
+                     <td><code>sort</code></td>
+                     <td>string</td>
+                     <td>sorting parameter, <code>rank</code>, <code>price</code>, <code>volume</code>, <code>code</code>, <code>name</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>order</code></td>
+                     <td>string</td>
+                     <td>sorting order, <code>ascending</code> or <code>descending</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>offset</code></td>
+                     <td>number</td>
+                     <td>offset of the list, default <code>0</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>limit</code></td>
+                     <td>number</td>
+                     <td>limit of the list, default <code>10</code>, maximum <code>100</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>meta</code></td>
+                     <td>boolean</td>
+                     <td>to include full coin information or not</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h3 id="response-6">Response</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s code</td>
+                  </tr>
+                  <tr>
+                     <td><code>name</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s name</td>
+                  </tr>
+                  <tr>
+                     <td><code>symbol</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s symbol</td>
+                  </tr>
+                  <tr>
+                     <td><code>color</code></td>
+                     <td>string</td>
+                     <td>hexadecimal color code (<code>#282a2a</code>)</td>
+                  </tr>
+                  <tr>
+                     <td><code>png32</code></td>
+                     <td>string</td>
+                     <td>32-pixel png image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>png64</code></td>
+                     <td>string</td>
+                     <td>64-pixel png image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp32</code></td>
+                     <td>string</td>
+                     <td>32-pixel webp image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp64</code></td>
+                     <td>string</td>
+                     <td>64-pixel webpg image of coin icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>exchanges</code></td>
+                     <td>number</td>
+                     <td>number of exchange coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>markets</code></td>
+                     <td>number</td>
+                     <td>number of markets coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>pairs</code></td>
+                     <td>number</td>
+                     <td>number of unique markets coin is present at</td>
+                  </tr>
+                  <tr>
+                     <td><code>allTimeHighUSD</code></td>
+                     <td>number</td>
+                     <td>all-time high in USD</td>
+                  </tr>
+                  <tr>
+                     <td><code>circulatingSupply</code></td>
+                     <td>number</td>
+                     <td>number of coins minted, but not locked</td>
+                  </tr>
+                  <tr>
+                     <td><code>totalSupply</code></td>
+                     <td>number</td>
+                     <td>number of coins minted, including locked</td>
+                  </tr>
+                  <tr>
+                     <td><code>maxSupply</code></td>
+                     <td>number</td>
+                     <td>maximum number of coins that can be minted</td>
+                  </tr>
+                  <tr>
+                     <td><code>rate</code></td>
+                     <td>number</td>
+                     <td>coin rate in the specified currency</td>
+                  </tr>
+                  <tr>
+                     <td><code>volume</code></td>
+                     <td>number</td>
+                     <td>24-hour volume of coin</td>
+                  </tr>
+                  <tr>
+                     <td><code>cap</code></td>
+                     <td>number</td>
+                     <td>market cap of coin</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="fiatsall"><code>/fiats/all</code></h2>
+            <p>List of all the fiats.</p>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/fiats/all&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/fiats/all&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Array of all the fiat currencies supported:</p>
+            </blockquote>
+            <pre class="highlight json"><code>[
+  {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;ALL&quot;</span>,
+    <span class="hljs-attr">&quot;countries&quot;</span>: [ <span class="hljs-string">&quot;ALB&quot;</span> ],
+    <span class="hljs-attr">&quot;flag&quot;</span>: <span class="hljs-string">&quot;ALB&quot;</span>,
+    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Albanian Lek&quot;</span>,
+    <span class="hljs-attr">&quot;symbol&quot;</span>: <span class="hljs-string">&quot;Lek&quot;</span>
+  },
+  {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;HNL&quot;</span>,
+    <span class="hljs-attr">&quot;countries&quot;</span>: [ <span class="hljs-string">&quot;HND&quot;</span> ],
+    <span class="hljs-attr">&quot;flag&quot;</span>: <span class="hljs-string">&quot;HND&quot;</span>,
+    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Honduran Lempira&quot;</span>,
+    <span class="hljs-attr">&quot;symbol&quot;</span>: <span class="hljs-string">&quot;L&quot;</span>
+  },
+  ...
+]</code></pre>
+            <h3 id="request-7">Request</h3>
+            <p>Accepts no request parameters.</p>
+            <h3 id="response-7">Response</h3>
+            <p>An array of following:</p>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>fiat ISO code</td>
+                  </tr>
+                  <tr>
+                     <td><code>name</code></td>
+                     <td>string</td>
+                     <td>fiat name</td>
+                  </tr>
+                  <tr>
+                     <td><code>symbol</code></td>
+                     <td>string</td>
+                     <td>fiat symbol</td>
+                  </tr>
+                  <tr>
+                     <td><code>countries</code></td>
+                     <td>array</td>
+                     <td>ISO country code list</td>
+                  </tr>
+                  <tr>
+                     <td><code>flag</code></td>
+                     <td>string</td>
+                     <td>ISO country code of the flag</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="exchangessingle"><code>/exchanges/single</code></h2>
+            <p>Assorted exchange information.</p>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/exchanges/single/meta&#x27; \
+  -H &#x27;content-type: application/json&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
+  -d &#x27;{&quot;currency&quot;:&quot;ETH&quot;,&quot;code&quot;:&quot;gemini&quot;,&quot;meta&quot;:true}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/exchanges/single&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  }),
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;ETH&#x27;</span>,
+    <span class="hljs-attr">code</span>: <span class="hljs-string">&#x27;gemini&#x27;</span>,
+    <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Should get us all the information we have on Gemini exchange:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;gemini&quot;</span>,
+  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Gemini&quot;</span>,
+  <span class="hljs-attr">&quot;png64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/64/gemini.png&quot;</span>,
+  <span class="hljs-attr">&quot;png128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/gemini.png&quot;</span>,
+  <span class="hljs-attr">&quot;webp64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/64/gemini.webp&quot;</span>,
+  <span class="hljs-attr">&quot;webp128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/gemini.webp&quot;</span>,
+  <span class="hljs-attr">&quot;centralized&quot;</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">&quot;usCompliant&quot;</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">&quot;markets&quot;</span>: <span class="hljs-number">43</span>,
+  <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">115473.97264617922</span>,
+  <span class="hljs-attr">&quot;depth&quot;</span>: <span class="hljs-number">23151.76758456139</span>,
+  <span class="hljs-attr">&quot;bidTotal&quot;</span>: <span class="hljs-number">10968.751251210175</span>,
+  <span class="hljs-attr">&quot;askTotal&quot;</span>: <span class="hljs-number">12183.016333351212</span>,
+  <span class="hljs-attr">&quot;visitors&quot;</span>: <span class="hljs-number">31738</span>,
+  <span class="hljs-attr">&quot;volumePerVisitor&quot;</span>: <span class="hljs-number">3.638350641066835</span>
+}</code></pre>
+            <h3 id="request-8">Request</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>currency</code></td>
+                     <td>string</td>
+                     <td>any valid coin or fiat code</td>
+                  </tr>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>exchange code</td>
+                  </tr>
+                  <tr>
+                     <td><code>meta</code></td>
+                     <td>boolean</td>
+                     <td>to include full exchange information or not</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h3 id="response-8">Response</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>exchange code</td>
+                  </tr>
+                  <tr>
+                     <td><code>name</code></td>
+                     <td>string</td>
+                     <td>exchange name</td>
+                  </tr>
+                  <tr>
+                     <td><code>png32</code></td>
+                     <td>string</td>
+                     <td>32-pixel png image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>png64</code></td>
+                     <td>string</td>
+                     <td>64-pixel png image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp32</code></td>
+                     <td>string</td>
+                     <td>32-pixel webp image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp64</code></td>
+                     <td>string</td>
+                     <td>64-pixel webpg image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>centralized</code></td>
+                     <td>boolean</td>
+                     <td>is the exchange centralized or decentralized</td>
+                  </tr>
+                  <tr>
+                     <td><code>usCompliant</code></td>
+                     <td>boolean</td>
+                     <td>is the exchange compliant in the USA</td>
+                  </tr>
+                  <tr>
+                     <td><code>markets</code></td>
+                     <td>number</td>
+                     <td>count of currently active markets on the exchange</td>
+                  </tr>
+                  <tr>
+                     <td><code>volume</code></td>
+                     <td>number</td>
+                     <td>24-hour volume in specified currency</td>
+                  </tr>
+                  <tr>
+                     <td><code>depth</code></td>
+                     <td>number</td>
+                     <td>2% orderbook total depth</td>
+                  </tr>
+                  <tr>
+                     <td><code>bidTotal</code></td>
+                     <td>number</td>
+                     <td>2% orderbook value bids</td>
+                  </tr>
+                  <tr>
+                     <td><code>askTotal</code></td>
+                     <td>number</td>
+                     <td>2% orderbook value asks</td>
+                  </tr>
+                  <tr>
+                     <td><code>visitors</code></td>
+                     <td>number</td>
+                     <td>number of daily visitors, estimate</td>
+                  </tr>
+                  <tr>
+                     <td><code>volumePerVisitor</code></td>
+                     <td>number</td>
+                     <td>daily volume per daily visitor</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h2 id="exchangeslist"><code>/exchanges/list</code></h2>
+            <p>Assorted information on list of exchanges.</p>
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/exchanges/single&#x27; \
+  -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;limit&quot;:1,&quot;sort&quot;:&quot;visitors&quot;,&quot;order&quot;:&quot;descending&quot;,&quot;meta&quot;:true}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/exchanges/single&#x27;</span>), {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
+    <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
+    <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
+  }),
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span>,
+    <span class="hljs-attr">limit</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">sort</span>: <span class="hljs-string">&#x27;visitors&#x27;</span>,
+    <span class="hljs-attr">order</span>: <span class="hljs-string">&#x27;descending&#x27;</span>,
+    <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
+  })
+})</code></pre>
+            <blockquote>
+               <p>Top one exchange by number of visitors:</p>
+            </blockquote>
+            <pre class="highlight json"><code>[
+  {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;binance&quot;</span>,
+    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Binance&quot;</span>,
+    <span class="hljs-attr">&quot;png64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/64/binance.png&quot;</span>,
+    <span class="hljs-attr">&quot;png128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/binance.png&quot;</span>,
+    <span class="hljs-attr">&quot;webp64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/64/binance.webp&quot;</span>,
+    <span class="hljs-attr">&quot;webp128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/binance.webp&quot;</span>,
+    <span class="hljs-attr">&quot;centralized&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;usCompliant&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;markets&quot;</span>: <span class="hljs-number">935</span>,
+    <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">27523372418</span>,
+    <span class="hljs-attr">&quot;depth&quot;</span>: <span class="hljs-number">465190859.1170668</span>,
+    <span class="hljs-attr">&quot;bidTotal&quot;</span>: <span class="hljs-number">225078060.0687528</span>,
+    <span class="hljs-attr">&quot;askTotal&quot;</span>: <span class="hljs-number">240112799.048314</span>,
+    <span class="hljs-attr">&quot;visitors&quot;</span>: <span class="hljs-number">779440</span>,
+    <span class="hljs-attr">&quot;volumePerVisitor&quot;</span>: <span class="hljs-number">35311.72690393103</span>
+  }
+]</code></pre>
+            <h3 id="request-9">Request</h3>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>exchange code</td>
+                  </tr>
+                  <tr>
+                     <td><code>sort</code></td>
+                     <td>string</td>
+                     <td>sorting parameter, <code>volume</code>, <code>liquidity</code>, <code>code</code>, <code>name</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>order</code></td>
+                     <td>string</td>
+                     <td>sorting order, <code>ascending</code> or <code>descending</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>offset</code></td>
+                     <td>number</td>
+                     <td>offset of the list, default <code>0</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>limit</code></td>
+                     <td>number</td>
+                     <td>limit of the list, default <code>50</code>, maximum <code>100</code></td>
+                  </tr>
+                  <tr>
+                     <td><code>meta</code></td>
+                     <td>boolean</td>
+                     <td>to include full exchange information or not</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h3 id="response-9">Response</h3>
+            <p>Returns array of objects containing:</p>
+            <table>
+               <thead>
+                  <tr>
+                     <th>key</th>
+                     <th>type</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>exchange code</td>
+                  </tr>
+                  <tr>
+                     <td><code>name</code></td>
+                     <td>string</td>
+                     <td>exchange name</td>
+                  </tr>
+                  <tr>
+                     <td><code>png32</code></td>
+                     <td>string</td>
+                     <td>32-pixel png image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>png64</code></td>
+                     <td>string</td>
+                     <td>64-pixel png image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp32</code></td>
+                     <td>string</td>
+                     <td>32-pixel webp image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp64</code></td>
+                     <td>string</td>
+                     <td>64-pixel webpg image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>centralized</code></td>
+                     <td>boolean</td>
+                     <td>is the exchange centralized or decentralized</td>
+                  </tr>
+                  <tr>
+                     <td><code>usCompliant</code></td>
+                     <td>boolean</td>
+                     <td>is the exchange compliant in the USA</td>
+                  </tr>
+                  <tr>
+                     <td><code>markets</code></td>
+                     <td>number</td>
+                     <td>count of currently active markets on the exchange</td>
+                  </tr>
+                  <tr>
+                     <td><code>volume</code></td>
+                     <td>number</td>
+                     <td>24-hour volume in specified currency</td>
+                  </tr>
+                  <tr>
+                     <td><code>depth</code></td>
+                     <td>number</td>
+                     <td>2% orderbook total depth</td>
+                  </tr>
+                  <tr>
+                     <td><code>bidTotal</code></td>
+                     <td>number</td>
+                     <td>2% orderbook value bids</td>
+                  </tr>
+                  <tr>
+                     <td><code>askTotal</code></td>
+                     <td>number</td>
+                     <td>2% orderbook value asks</td>
+                  </tr>
+                  <tr>
+                     <td><code>visitors</code></td>
+                     <td>number</td>
+                     <td>number of daily visitors, estimate</td>
+                  </tr>
+                  <tr>
+                     <td><code>volumePerVisitor</code></td>
+                     <td>number</td>
+                     <td>daily volume per daily visitor</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h1 id="errors">Errors</h1>
+            <blockquote>
+               <p>Example end-point with JSON error information:</p>
+            </blockquote>
+            <pre class="highlight json"><code>{
+  <span class="hljs-attr">&quot;error&quot;</span>: {
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-number">418</span>,
+    <span class="hljs-attr">&quot;status&quot;</span>: <span class="hljs-string">&quot;I&#x27;m a teapot.&quot;</span>,
+    <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;Yes, a teapot&quot;</span>
+  }
+}</code></pre>
+            <p>Errors follow <a href="#there-is-only-one-format">There Is Only One Format</a> as well.</p>
+            <aside class="notice"> This doesn't mean HTTP end-points won't have the same status code assigned as well. We recommend you use error information from the JSON response though. </aside>
+            <table>
+               <thead>
+                  <tr>
+                     <th>code</th>
+                     <th>status</th>
+                     <th>description</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>400</td>
+                     <td>Bad Request</td>
+                     <td>Your request is invalid.</td>
+                  </tr>
+                  <tr>
+                     <td>401</td>
+                     <td>Unauthorized</td>
+                     <td>Your API key is wrong.</td>
+                  </tr>
+                  <tr>
+                     <td>403</td>
+                     <td>Forbidden</td>
+                     <td>The resource requested is hidden for administrators only.</td>
+                  </tr>
+                  <tr>
+                     <td>404</td>
+                     <td>Not Found</td>
+                     <td>The specified resource could not be found.</td>
+                  </tr>
+                  <tr>
+                     <td>405</td>
+                     <td>Method Not Allowed</td>
+                     <td>You tried to access a resource with an invalid method.</td>
+                  </tr>
+                  <tr>
+                     <td>406</td>
+                     <td>Not Acceptable</td>
+                     <td>You requested a format that isn&#39;t json.</td>
+                  </tr>
+                  <tr>
+                     <td>410</td>
+                     <td>Gone</td>
+                     <td>The resource requested has been removed from our servers.</td>
+                  </tr>
+                  <tr>
+                     <td>418</td>
+                     <td>I&#39;m a teapot.</td>
+                     <td>Yes, a teapot.</td>
+                  </tr>
+                  <tr>
+                     <td>429</td>
+                     <td>Too Many Requests</td>
+                     <td>You&#39;re requesting too many resources! Slow down!</td>
+                  </tr>
+                  <tr>
+                     <td>500</td>
+                     <td>Internal Server Error</td>
+                     <td>We had a problem with our server. Try again later.</td>
+                  </tr>
+                  <tr>
+                     <td>503</td>
+                     <td>Service Unavailable</td>
+                     <td>We&#39;re temporarily offline for maintenance. Please try again later.</td>
+                  </tr>
+               </tbody>
+            </table>
+            <h1 id="limits">Limits</h1>
+            <p>There&#39;s really not a lot of them.</p>
+            <p>Here&#39;s a complete list:</p>
+            <ul>
+               <li>you need to have <a href="https://www.livecoinwatch.com">Live Coin Watch account</a></li>
+               <li>each request is mapped to a single <em>credit</em></li>
+               <li>daily credit allowance is 10,000</li>
+               <li>credits are renewed every UTC midnight</li>
+               <li>you can check your API status at your <a href="https://www.livecoinwatch.com/profile">Profile page</a></li>
+            </ul>
+            <p>There you go, that&#39;s all.</p>
+            <p>Have fun, be safe!</p>
+         </div>
+         <div class=dark-box>
+            <div class=lang-selector>
+               <a href=# data-language-name="shell">shell</a>
+               <a href=# data-language-name="javascript">javascript</a>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
