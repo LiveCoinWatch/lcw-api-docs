@@ -10,7 +10,7 @@
       <link href=stylesheets/highlight-gruvbox-dark.css rel=stylesheet media=screen,print>
       <script src=javascripts/all.js></script>
    </head>
-   <body class="" data-languages="[&#34;shell&#34;,&#34;javascript&#34;]">
+   <body class="" data-languages="[&#34;shell&#34;,&#34;javascript&#34;,&#34;php&#34;]">
       <a href=# id=nav-button>
          <span>NAV <img alt=navbar class=image-navbar src=images/navbar.png></span>
       </a>
@@ -19,6 +19,7 @@
          <div class=lang-selector>
             <a href=# data-language-name="shell">shell</a>
             <a href=# data-language-name="javascript">javascript</a>
+            <a href=# data-language-name="php">php</a>
          </div>
          <div class=search>
             <input type=text class=search id=input-search placeholder="Search">
@@ -60,6 +61,17 @@
 })</code></pre>
             <p>All the examples are written for modern browers.</p>
             <p>Most examples should be easily portable to run in other JavaScript environments like <a href="https://nodejs.org/en/about/releases/">Node.js</a> or not even needing any changes from browser version with <a href="https://deno.land">Deno</a>.</p>
+            <h2 id="php">PHP</h2>
+            <pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
+            <p>All PHP examples are written using pure PHP without using any dependencies. These examples should work on versions of PHP that support <a href="https://www.php.net/manual/en/function.stream-context-create.php">stream_context_create</a> &amp; <a href="https://www.php.net/manual/en/function.stream-get-contents.php">stream_get_contents</a> (Supported versions: PHP 5, PHP 7, PHP 8).</p>
             <h1 id="concepts">Concepts</h1>
             <p>We&#39;ve tried to keep the API surface simple and efficient, so let&#39;s discuss few <a href="#concepts">concepts</a> that apply to the entirety of the API.</p>
             <h2 id="there-is-only-one-domain">There Is Only One <strong>Domain</strong></h2>
@@ -67,7 +79,15 @@
   -H &#x27;content-type: application/json&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>), {
   <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
   <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({ <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>If everything&#39;s fine, you should get...</p>
             </blockquote>
@@ -93,13 +113,23 @@
     <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
     <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/credits&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Don&#39;t forget to replace <code>&lt;YOUR_API_KEY&gt;</code> with one you&#39;ve got. Return response should be:</p>
             </blockquote>
             <pre class="highlight json"><code>{
-  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">10000</span>,
-  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>
+  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>,
+  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">10000</span>
+  
 }</code></pre>
             <p>Live Coin Watch uses API keys to access all end-points. You can generate a new API key at your <a href="https://www.livecoinwatch.com/profile">profile page</a>. Authorizing with your API key is as simple as providing HTTP header <code>x-api-key: &lt;YOUR_API_KEY&gt;</code>.</p>
             <p>All (<a href="#status">but one</a>) API end-points need to include this header.</p>
@@ -111,7 +141,15 @@
   -H &#x27;content-type: application/json&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>), {
   <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;GET&#x27;</span>,
   <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({ <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;GET&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>This will fail with:</p>
             </blockquote>
@@ -145,13 +183,22 @@
     <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
     <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/credits&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Don&#39;t forget to replace <code>&lt;YOUR_API_KEY&gt;</code> with one you&#39;ve got. Return response should be:</p>
             </blockquote>
             <pre class="highlight json"><code>{
-  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">100000</span>,
-  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>
+  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>,
+  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">100000</span>
 }</code></pre>
             <p>Let&#39;s call it <em>credits</em>, and you can read about them <a href="#limits">in detail</a>, but summarized - they map directly to your requests 1-to-1.</p>
             <p>You can always easily check your credits status at <code>/credits</code> end-point, as well as on your Live Coin Watch <a href="https://www.livecoinwatch.com/profile">profile page</a>.</p>
@@ -162,7 +209,15 @@
   -H &#x27;content-type: application/json&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>), {
   <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
   <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({ <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/status&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>...and it returns nothing! Well, empty JSON object anyways.</p>
             </blockquote>
@@ -180,13 +235,22 @@
     <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
     <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/credits&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Let&#39;s see how much credits we have and what&#39;s the limit:</p>
             </blockquote>
             <pre class="highlight json"><code>{
-  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">10000</span>,
-  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>
+  <span class="hljs-attr">&quot;dailyCreditsRemaining&quot;</span>: <span class="hljs-number">4321</span>,
+  <span class="hljs-attr">&quot;dailyCreditsLimit&quot;</span>: <span class="hljs-number">10000</span>
 }</code></pre>
             <blockquote>
                <p>Error response (one of):</p>
@@ -212,14 +276,14 @@
                </thead>
                <tbody>
                   <tr>
-                     <td><code>dailyCreditsLimit</code></td>
-                     <td>number</td>
-                     <td>total daily starting credits</td>
-                  </tr>
-                  <tr>
                      <td><code>dailyCreditsRemaining</code></td>
                      <td>number</td>
                      <td>remaining daily credits</td>
+                  </tr>
+                  <tr>
+                     <td><code>dailyCreditsLimit</code></td>
+                     <td>number</td>
+                     <td>total daily starting credits</td>
                   </tr>
                </tbody>
             </table>
@@ -235,7 +299,18 @@
     <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
   }),
   <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({ <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span> })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$data</span> = json_encode(<span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;currency&#x27;</span> =&gt; <span class="hljs-string">&#x27;USD&#x27;</span>));
+<span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>,
+        <span class="hljs-string">&#x27;content&#x27;</span> =&gt; <span class="hljs-variable">$data</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/overview&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>How&#39;s all of crypto doing at the moment:</p>
             </blockquote>
@@ -296,7 +371,7 @@
             </table>
             <h2 id="overviewhistory"><code>/overview/history</code></h2>
             <p>Get historical aggregated data of entire market.</p>
-            <pre class="highlight shell"><code>curl -X POST&#x27;https://api.livecoinwatch.com/overview/history&#x27; \
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/overview/history&#x27; \
   -H &#x27;content-type: application/json&#x27; \
   -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
   -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;start&quot;:1606232700000,&quot;end&quot;:1606233000000}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/overview/history&#x27;</span>), {
@@ -310,7 +385,18 @@
     <span class="hljs-attr">start</span>: <span class="hljs-number">1606232700000</span>,
     <span class="hljs-attr">end</span>: <span class="hljs-number">1606233000000</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$data</span> = json_encode(<span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;currency&#x27;</span> =&gt; <span class="hljs-string">&#x27;USD&#x27;</span>, <span class="hljs-string">&#x27;start&#x27;</span> =&gt; <span class="hljs-number">1606232700000</span>, <span class="hljs-string">&#x27;end&#x27;</span> =&gt; <span class="hljs-number">1606233000000</span>));
+<span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>,
+        <span class="hljs-string">&#x27;content&#x27;</span> =&gt; <span class="hljs-variable">$data</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/overview/history&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>How&#39;s all of crypto trending across time:</p>
             </blockquote>
@@ -410,7 +496,18 @@
     <span class="hljs-attr">code</span>: <span class="hljs-string">&#x27;ETH&#x27;</span>,
     <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$data</span> = json_encode(<span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;currency&#x27;</span> =&gt; <span class="hljs-string">&#x27;USD&#x27;</span>, <span class="hljs-string">&#x27;code&#x27;</span> =&gt; <span class="hljs-string">&#x27;ETH&#x27;</span>, <span class="hljs-string">&#x27;meta&#x27;</span> =&gt; <span class="hljs-literal">true</span>));
+<span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>,
+        <span class="hljs-string">&#x27;content&#x27;</span> =&gt; <span class="hljs-variable">$data</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/single&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Let&#39;s see all of current data on ETH, in USD currency:</p>
             </blockquote>
@@ -444,14 +541,14 @@
                </thead>
                <tbody>
                   <tr>
-                     <td><code>code</code></td>
-                     <td>string</td>
-                     <td>coin code</td>
-                  </tr>
-                  <tr>
                      <td><code>currency</code></td>
                      <td>string</td>
                      <td>any valid coin or fiat code</td>
+                  </tr>
+                  <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>coin code</td>
                   </tr>
                   <tr>
                      <td><code>meta</code></td>
@@ -580,7 +677,18 @@
     <span class="hljs-attr">end</span>: <span class="hljs-number">1617035400000</span>,
     <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$data</span> = json_encode(<span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;currency&#x27;</span> =&gt; <span class="hljs-string">&#x27;USD&#x27;</span>, <span class="hljs-string">&#x27;code&#x27;</span> =&gt; <span class="hljs-string">&#x27;BTC&#x27;</span>, <span class="hljs-string">&#x27;start&#x27;</span> =&gt; <span class="hljs-number">1617035100000</span>, <span class="hljs-string">&#x27;end&#x27;</span> =&gt; <span class="hljs-number">1617035400000</span>, <span class="hljs-string">&#x27;meta&#x27;</span> =&gt; <span class="hljs-literal">true</span>));
+<span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>,
+        <span class="hljs-string">&#x27;content&#x27;</span> =&gt; <span class="hljs-variable">$data</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/single/history&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>How is BTC trending over a period of time:</p>
             </blockquote>
@@ -749,7 +857,7 @@
             <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/coins/list&#x27; \
   -H &#x27;content-type: application/json&#x27; \
   -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
-  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;limit&quot;:2,&quot;sort&quot;:&quot;rank&quot;,&quot;order&quot;:&quot;ascending&quot;,&quot;meta&quot;:false}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/list&#x27;</span>), {
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;sort&quot;:&quot;rank&quot;,&quot;order&quot;:&quot;ascending&quot;,&quot;offset&quot;:0,&quot;limit&quot;:2,&quot;meta&quot;:false}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/list&#x27;</span>), {
   <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
   <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
     <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
@@ -757,12 +865,24 @@
   }),
   <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
     <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span>,
-    <span class="hljs-attr">limit</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">sort</span>: <span class="hljs-string">&#x27;rank&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-string">&#x27;ascending&#x27;</span>,
+    <span class="hljs-attr">offset</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">limit</span>: <span class="hljs-number">2</span>,
     <span class="hljs-attr">meta</span>: <span class="hljs-literal">false</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$data</span> = json_encode(<span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;currency&#x27;</span> =&gt; <span class="hljs-string">&#x27;USD&#x27;</span>, <span class="hljs-string">&#x27;sort&#x27;</span> =&gt; <span class="hljs-string">&#x27;rank&#x27;</span>, <span class="hljs-string">&#x27;order&#x27;</span> =&gt; <span class="hljs-string">&#x27;ascending&#x27;</span>, <span class="hljs-string">&#x27;offset&#x27;</span> =&gt; <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;limit&#x27;</span> =&gt; <span class="hljs-number">2</span>,<span class="hljs-string">&#x27;meta&#x27;</span> =&gt; <span class="hljs-literal">false</span>));
+<span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>,
+        <span class="hljs-string">&#x27;content&#x27;</span> =&gt; <span class="hljs-variable">$data</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/coins/list&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Let&#39;s see top two coins by rank, just frequently-changing data, please:</p>
             </blockquote>
@@ -771,8 +891,7 @@
     <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;BTC&quot;</span>,
     <span class="hljs-attr">&quot;rate&quot;</span>: <span class="hljs-number">59075.58195922644</span>,
     <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">23100393182</span>,
-    <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">1102979514307</span>,
-    <span class="hljs-attr">&quot;maxCap&quot;</span>: <span class="hljs-number">1240587221143.7551</span>
+    <span class="hljs-attr">&quot;cap&quot;</span>: <span class="hljs-number">1102979514307</span>
   },
   {
     <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;ETH&quot;</span>,
@@ -833,11 +952,6 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr>
-                     <td><code>code</code></td>
-                     <td>string</td>
-                     <td>coin&#39;s code</td>
-                  </tr>
                   <tr>
                      <td><code>name</code></td>
                      <td>string</td>
@@ -909,6 +1023,11 @@
                      <td>maximum number of coins that can be minted</td>
                   </tr>
                   <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>coin&#39;s code</td>
+                  </tr>
+                  <tr>
                      <td><code>rate</code></td>
                      <td>number</td>
                      <td>coin rate in the specified currency</td>
@@ -935,7 +1054,16 @@
     <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
     <span class="hljs-string">&#x27;x-api-key&#x27;</span>: <span class="hljs-string">&#x27;&lt;YOUR_API_KEY&gt;&#x27;</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/fiats/all&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Array of all the fiat currencies supported:</p>
             </blockquote>
@@ -975,16 +1103,6 @@
                      <td>fiat ISO code</td>
                   </tr>
                   <tr>
-                     <td><code>name</code></td>
-                     <td>string</td>
-                     <td>fiat name</td>
-                  </tr>
-                  <tr>
-                     <td><code>symbol</code></td>
-                     <td>string</td>
-                     <td>fiat symbol</td>
-                  </tr>
-                  <tr>
                      <td><code>countries</code></td>
                      <td>array</td>
                      <td>ISO country code list</td>
@@ -994,11 +1112,21 @@
                      <td>string</td>
                      <td>ISO country code of the flag</td>
                   </tr>
+                  <tr>
+                     <td><code>name</code></td>
+                     <td>string</td>
+                     <td>fiat name</td>
+                  </tr>
+                  <tr>
+                     <td><code>symbol</code></td>
+                     <td>string</td>
+                     <td>fiat symbol</td>
+                  </tr>
                </tbody>
             </table>
             <h2 id="exchangessingle"><code>/exchanges/single</code></h2>
             <p>Assorted exchange information.</p>
-            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/exchanges/single/meta&#x27; \
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/exchanges/single&#x27; \
   -H &#x27;content-type: application/json&#x27; \
   -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
   -d &#x27;{&quot;currency&quot;:&quot;ETH&quot;,&quot;code&quot;:&quot;gemini&quot;,&quot;meta&quot;:true}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/exchanges/single&#x27;</span>), {
@@ -1012,12 +1140,22 @@
     <span class="hljs-attr">code</span>: <span class="hljs-string">&#x27;gemini&#x27;</span>,
     <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$data</span> = json_encode(<span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;currency&#x27;</span> =&gt; <span class="hljs-string">&#x27;ETH&#x27;</span>, <span class="hljs-string">&#x27;code&#x27;</span> =&gt; <span class="hljs-string">&#x27;gemini&#x27;</span>, <span class="hljs-string">&#x27;meta&#x27;</span> =&gt; <span class="hljs-literal">true</span>));
+<span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>,
+        <span class="hljs-string">&#x27;content&#x27;</span> =&gt; <span class="hljs-variable">$data</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/exchanges/single&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Should get us all the information we have on Gemini exchange:</p>
             </blockquote>
             <pre class="highlight json"><code>{
-  <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;gemini&quot;</span>,
   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Gemini&quot;</span>,
   <span class="hljs-attr">&quot;png64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/64/gemini.png&quot;</span>,
   <span class="hljs-attr">&quot;png128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/gemini.png&quot;</span>,
@@ -1025,11 +1163,12 @@
   <span class="hljs-attr">&quot;webp128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/gemini.webp&quot;</span>,
   <span class="hljs-attr">&quot;centralized&quot;</span>: <span class="hljs-literal">true</span>,
   <span class="hljs-attr">&quot;usCompliant&quot;</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;gemini&quot;</span>,
   <span class="hljs-attr">&quot;markets&quot;</span>: <span class="hljs-number">43</span>,
   <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">115473.97264617922</span>,
-  <span class="hljs-attr">&quot;depth&quot;</span>: <span class="hljs-number">23151.76758456139</span>,
   <span class="hljs-attr">&quot;bidTotal&quot;</span>: <span class="hljs-number">10968.751251210175</span>,
   <span class="hljs-attr">&quot;askTotal&quot;</span>: <span class="hljs-number">12183.016333351212</span>,
+  <span class="hljs-attr">&quot;depth&quot;</span>: <span class="hljs-number">23151.76758456139</span>,
   <span class="hljs-attr">&quot;visitors&quot;</span>: <span class="hljs-number">31738</span>,
   <span class="hljs-attr">&quot;volumePerVisitor&quot;</span>: <span class="hljs-number">3.638350641066835</span>
 }</code></pre>
@@ -1071,19 +1210,9 @@
                </thead>
                <tbody>
                   <tr>
-                     <td><code>code</code></td>
-                     <td>string</td>
-                     <td>exchange code</td>
-                  </tr>
-                  <tr>
                      <td><code>name</code></td>
                      <td>string</td>
                      <td>exchange name</td>
-                  </tr>
-                  <tr>
-                     <td><code>png32</code></td>
-                     <td>string</td>
-                     <td>32-pixel png image of exchange icon</td>
                   </tr>
                   <tr>
                      <td><code>png64</code></td>
@@ -1091,14 +1220,19 @@
                      <td>64-pixel png image of exchange icon</td>
                   </tr>
                   <tr>
-                     <td><code>webp32</code></td>
+                     <td><code>png128</code></td>
                      <td>string</td>
-                     <td>32-pixel webp image of exchange icon</td>
+                     <td>128-pixel png image of exchange icon</td>
                   </tr>
                   <tr>
                      <td><code>webp64</code></td>
                      <td>string</td>
-                     <td>64-pixel webpg image of exchange icon</td>
+                     <td>64-pixel webp image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp128</code></td>
+                     <td>string</td>
+                     <td>128-pixel webpg image of exchange icon</td>
                   </tr>
                   <tr>
                      <td><code>centralized</code></td>
@@ -1111,6 +1245,11 @@
                      <td>is the exchange compliant in the USA</td>
                   </tr>
                   <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>exchange code</td>
+                  </tr>
+                  <tr>
                      <td><code>markets</code></td>
                      <td>number</td>
                      <td>count of currently active markets on the exchange</td>
@@ -1121,11 +1260,6 @@
                      <td>24-hour volume in specified currency</td>
                   </tr>
                   <tr>
-                     <td><code>depth</code></td>
-                     <td>number</td>
-                     <td>2% orderbook total depth</td>
-                  </tr>
-                  <tr>
                      <td><code>bidTotal</code></td>
                      <td>number</td>
                      <td>2% orderbook value bids</td>
@@ -1134,6 +1268,11 @@
                      <td><code>askTotal</code></td>
                      <td>number</td>
                      <td>2% orderbook value asks</td>
+                  </tr>
+                  <tr>
+                     <td><code>depth</code></td>
+                     <td>number</td>
+                     <td>2% orderbook total depth</td>
                   </tr>
                   <tr>
                      <td><code>visitors</code></td>
@@ -1149,9 +1288,9 @@
             </table>
             <h2 id="exchangeslist"><code>/exchanges/list</code></h2>
             <p>Assorted information on list of exchanges.</p>
-            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/exchanges/single&#x27; \
+            <pre class="highlight shell"><code>curl -X POST &#x27;https://api.livecoinwatch.com/exchanges/list&#x27; \
   -H &#x27;x-api-key: &lt;YOUR_API_KEY&gt;&#x27; \
-  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;limit&quot;:1,&quot;sort&quot;:&quot;visitors&quot;,&quot;order&quot;:&quot;descending&quot;,&quot;meta&quot;:true}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/exchanges/single&#x27;</span>), {
+  -d &#x27;{&quot;currency&quot;:&quot;USD&quot;,&quot;sort&quot;:&quot;visitors&quot;,&quot;order&quot;:&quot;descending&quot;,&quot;offset&quot;:0,&quot;limit&quot;:1,&quot;meta&quot;:true}&#x27;</code></pre><pre class="highlight javascript"><code><span class="hljs-keyword">await</span> fetch(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/exchanges/list&#x27;</span>), {
   <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
   <span class="hljs-attr">headers</span>: <span class="hljs-keyword">new</span> Headers({
     <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
@@ -1159,18 +1298,29 @@
   }),
   <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
     <span class="hljs-attr">currency</span>: <span class="hljs-string">&#x27;USD&#x27;</span>,
-    <span class="hljs-attr">limit</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">sort</span>: <span class="hljs-string">&#x27;visitors&#x27;</span>,
     <span class="hljs-attr">order</span>: <span class="hljs-string">&#x27;descending&#x27;</span>,
+    <span class="hljs-attr">offset</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">limit</span>: <span class="hljs-number">1</span>
     <span class="hljs-attr">meta</span>: <span class="hljs-literal">true</span>
   })
-})</code></pre>
+})</code></pre><pre class="highlight php"><code><span class="hljs-variable">$data</span> = json_encode(<span class="hljs-keyword">array</span>(<span class="hljs-string">&#x27;currency&#x27;</span> =&gt; <span class="hljs-string">&#x27;USD&#x27;</span>, <span class="hljs-string">&#x27;sort&#x27;</span> =&gt; <span class="hljs-string">&#x27;visitors&#x27;</span>, <span class="hljs-string">&#x27;order&#x27;</span> =&gt; <span class="hljs-string">&#x27;descending&#x27;</span>, <span class="hljs-string">&#x27;offset&#x27;</span> =&gt; <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;limit&#x27;</span> =&gt; <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;meta&#x27;</span> =&gt; <span class="hljs-literal">true</span>));
+<span class="hljs-variable">$context_options</span> = <span class="hljs-keyword">array</span> (
+    <span class="hljs-string">&#x27;http&#x27;</span> =&gt; <span class="hljs-keyword">array</span> (
+        <span class="hljs-string">&#x27;method&#x27;</span> =&gt; <span class="hljs-string">&#x27;POST&#x27;</span>,
+        <span class="hljs-string">&#x27;header&#x27;</span> =&gt; <span class="hljs-string">&quot;Content-type: application/json\r\n&quot;</span>
+            . <span class="hljs-string">&quot;x-api-key: &lt;YOUR_API_KEY&gt;&quot;</span> . <span class="hljs-string">&quot;\r\n&quot;</span>,
+        <span class="hljs-string">&#x27;content&#x27;</span> =&gt; <span class="hljs-variable">$data</span>
+    )
+);
+<span class="hljs-variable">$context</span> = stream_context_create(<span class="hljs-variable">$context_options</span>);
+<span class="hljs-variable">$fp</span> = fopen(<span class="hljs-string">&#x27;https://api.livecoinwatch.com/exchanges/list&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>, <span class="hljs-literal">false</span>, <span class="hljs-variable">$context</span>);
+print_r(stream_get_contents(<span class="hljs-variable">$fp</span>));</code></pre>
             <blockquote>
                <p>Top one exchange by number of visitors:</p>
             </blockquote>
             <pre class="highlight json"><code>[
   {
-    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;binance&quot;</span>,
     <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Binance&quot;</span>,
     <span class="hljs-attr">&quot;png64&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/64/binance.png&quot;</span>,
     <span class="hljs-attr">&quot;png128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/binance.png&quot;</span>,
@@ -1178,11 +1328,12 @@
     <span class="hljs-attr">&quot;webp128&quot;</span>: <span class="hljs-string">&quot;https://lcw.nyc3.cdn.digitaloceanspaces.com/development/exchanges/128/binance.webp&quot;</span>,
     <span class="hljs-attr">&quot;centralized&quot;</span>: <span class="hljs-literal">true</span>,
     <span class="hljs-attr">&quot;usCompliant&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;code&quot;</span>: <span class="hljs-string">&quot;binance&quot;</span>,
     <span class="hljs-attr">&quot;markets&quot;</span>: <span class="hljs-number">935</span>,
     <span class="hljs-attr">&quot;volume&quot;</span>: <span class="hljs-number">27523372418</span>,
-    <span class="hljs-attr">&quot;depth&quot;</span>: <span class="hljs-number">465190859.1170668</span>,
     <span class="hljs-attr">&quot;bidTotal&quot;</span>: <span class="hljs-number">225078060.0687528</span>,
     <span class="hljs-attr">&quot;askTotal&quot;</span>: <span class="hljs-number">240112799.048314</span>,
+    <span class="hljs-attr">&quot;depth&quot;</span>: <span class="hljs-number">465190859.1170668</span>,
     <span class="hljs-attr">&quot;visitors&quot;</span>: <span class="hljs-number">779440</span>,
     <span class="hljs-attr">&quot;volumePerVisitor&quot;</span>: <span class="hljs-number">35311.72690393103</span>
   }
@@ -1198,9 +1349,9 @@
                </thead>
                <tbody>
                   <tr>
-                     <td><code>code</code></td>
+                     <td><code>currency</code></td>
                      <td>string</td>
-                     <td>exchange code</td>
+                     <td>any valid coin or fiat code</td>
                   </tr>
                   <tr>
                      <td><code>sort</code></td>
@@ -1241,19 +1392,9 @@
                </thead>
                <tbody>
                   <tr>
-                     <td><code>code</code></td>
-                     <td>string</td>
-                     <td>exchange code</td>
-                  </tr>
-                  <tr>
                      <td><code>name</code></td>
                      <td>string</td>
                      <td>exchange name</td>
-                  </tr>
-                  <tr>
-                     <td><code>png32</code></td>
-                     <td>string</td>
-                     <td>32-pixel png image of exchange icon</td>
                   </tr>
                   <tr>
                      <td><code>png64</code></td>
@@ -1261,14 +1402,19 @@
                      <td>64-pixel png image of exchange icon</td>
                   </tr>
                   <tr>
-                     <td><code>webp32</code></td>
+                     <td><code>png128</code></td>
                      <td>string</td>
-                     <td>32-pixel webp image of exchange icon</td>
+                     <td>128-pixel png image of exchange icon</td>
                   </tr>
                   <tr>
                      <td><code>webp64</code></td>
                      <td>string</td>
-                     <td>64-pixel webpg image of exchange icon</td>
+                     <td>64-pixel webp image of exchange icon</td>
+                  </tr>
+                  <tr>
+                     <td><code>webp128</code></td>
+                     <td>string</td>
+                     <td>128-pixel webpg image of exchange icon</td>
                   </tr>
                   <tr>
                      <td><code>centralized</code></td>
@@ -1281,6 +1427,11 @@
                      <td>is the exchange compliant in the USA</td>
                   </tr>
                   <tr>
+                     <td><code>code</code></td>
+                     <td>string</td>
+                     <td>exchange code</td>
+                  </tr>
+                  <tr>
                      <td><code>markets</code></td>
                      <td>number</td>
                      <td>count of currently active markets on the exchange</td>
@@ -1291,11 +1442,6 @@
                      <td>24-hour volume in specified currency</td>
                   </tr>
                   <tr>
-                     <td><code>depth</code></td>
-                     <td>number</td>
-                     <td>2% orderbook total depth</td>
-                  </tr>
-                  <tr>
                      <td><code>bidTotal</code></td>
                      <td>number</td>
                      <td>2% orderbook value bids</td>
@@ -1304,6 +1450,11 @@
                      <td><code>askTotal</code></td>
                      <td>number</td>
                      <td>2% orderbook value asks</td>
+                  </tr>
+                  <tr>
+                     <td><code>depth</code></td>
+                     <td>number</td>
+                     <td>2% orderbook total depth</td>
                   </tr>
                   <tr>
                      <td><code>visitors</code></td>
@@ -1414,6 +1565,7 @@
             <div class=lang-selector>
                <a href=# data-language-name="shell">shell</a>
                <a href=# data-language-name="javascript">javascript</a>
+               <a href=# data-language-name="php">php</a>
             </div>
          </div>
       </div>
